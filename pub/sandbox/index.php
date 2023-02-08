@@ -22,28 +22,28 @@
 
         $sourceFileName = $_FILES['uploadedFile']['name'];
 
-        $soureceFileExtension = pathinfo($sourceFileName, PATHINFO_EXTENSION);
-
-        $soureceFileExtension = strtolower($soureceFileExtension);
-
-        $newFileName = hash("sha256", $sourceFileName) . hrtime(true) . "." . $soureceFileExtension;
-
-        $targetURL = $targetDir . $newFileName;
-
         $tempURL = $_FILES['uploadedFile']['tmp_name'];
 
-        $imgInfo = getimagesize($tempURL);
+        $imgInfo = @getimagesize($tempURL);
         if(!is_array($imgInfo)) 
         {
             die("BŁĄD: Przekazany plik nie jest obrazem!");
         }
+
+        $newFileName = hash("sha256", $sourceFileName) . hrtime(true) . "." . ".webp";
+
+        $imageStrig = file_get_contents($tempURL);
+
+        $gdImage = imagecreatefromstring($imageStrig);
+
+        $targetURL = $targetDir . $newFileName;
 
         if(file_exists($targetURL)) 
         {
             die("BŁĄD: Podany plik już istnieje!");
         }
 
-        move_uploaded_file($tempURL, $targetURL);
+        imagewebp($gdImage, $targetURL);
 
         echo "Plik został poprawnie wgrany na serwer";
     }
