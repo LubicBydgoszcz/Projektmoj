@@ -22,6 +22,14 @@
 
         $sourceFileName = $_FILES['uploadedFile']['name'];
 
+        $soureceFileExtension = pathinfo($sourceFileName, PATHINFO_EXTENSION);
+
+        $soureceFileExtension = strtolower($soureceFileExtension);
+
+        $newFileName = hash("sha256", $sourceFileName) . hrtime(true) . "." . $soureceFileExtension;
+
+        $targetURL = $targetDir . $newFileName;
+
         $tempURL = $_FILES['uploadedFile']['tmp_name'];
 
         $imgInfo = getimagesize($tempURL);
@@ -29,8 +37,6 @@
         {
             die("BŁĄD: Przekazany plik nie jest obrazem!");
         }
-
-        $targetURL = $targetDir . $sourceFileName;
 
         if(file_exists($targetURL)) 
         {
