@@ -16,6 +16,8 @@
     </form>
 
     <?php
+    $db = new mysqli('localhost', 'root', '', 'bazacms');
+
     if(isset($_POST['submit']))
     {
         $targetDir = "img/";
@@ -46,6 +48,13 @@
         imagewebp($gdImage, $targetURL);
 
         echo "Plik został poprawnie wgrany na serwer";
+
+        $dateTime = date("Y-m-d H:i:s");
+
+        $sql = "INSERT INTO post (timestamp, filename) VALUE ('$dateTime', '$newFileName')";
+
+        $db->query($sql);
+        $db->close();
     }
     ?>
 </body>
