@@ -32,7 +32,8 @@
             die("BŁĄD: Przekazany plik nie jest obrazem!");
         }
 
-        $newFileName = hash("sha256", $sourceFileName) . hrtime(true) . "." . ".webp";
+        $hash = hash("sha256", $sourceFileName . hrtime(true));
+        $newFileName = $hash . ".webp";
 
         $imageStrig = file_get_contents($tempURL);
 
@@ -47,11 +48,10 @@
 
         imagewebp($gdImage, $targetURL);
 
-        echo "Plik został poprawnie wgrany na serwer";
-
         $dateTime = date("Y-m-d H:i:s");
 
-        $sql = "INSERT INTO post (timestamp, filename) VALUE ('$dateTime', '$newFileName')";
+        $sql = "INSERT INTO post (timestamp, filename) VALUE ('$dateTime', '$hash')";
+        echo "Plik został pomyślnie wgrany na serwer";
 
         $db->query($sql);
         $db->close();
