@@ -1,5 +1,27 @@
 <?php
 class Post {
+    private int $id;
+    private string $filename;
+    private string $taimestamp;
+
+    function __construct(int $i, string $f, string $t)
+    {
+        $this->id = $i;
+        $this->filename = $f;
+        $this->taimestamp = $t;   
+    }
+
+    static function getLast() : Post {
+        global $db;
+        $query = $db->prepare("SELECT * FROM post ORDER BY timestamp DESC LIMIT 1");
+        $query->execute();
+        $result = $query->get_result();
+        $row = $result->fetch_assoc();
+        $p = new Post($row['id'], $row['filename'], $row['timestamp']);
+        return $p;
+
+    }
+
     static function upload(string $tempFileName) {
         $targetDir = "img/";
 
