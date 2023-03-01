@@ -22,6 +22,21 @@ class Post {
 
     }
 
+    static function getPage(int $pageNumber = 1, int $postsPerPage = 10) : array {
+        global $db;
+        $query = $db->prepare("SELECT * FROM post ORDER BY timestamp DESC LIMIT ? OFFSET ?");
+        $offset = ($pageNumber-1)*$postsPerPage;
+        $query->bind_param('ii', $postsPerPage, $offset);
+        $query->execute();
+        $result = $query->get_result();
+        $postsArray = array();
+        while($row = $result->fetch_assoc()){
+            $post = new Post($row['id'], $row['filename'], $row['timestamp']);
+            array_push($postsArray, $post);
+        }
+        return $postsArray;
+    }
+
     static function upload(string $tempFileName) {
         $targetDir = "img/";
 
