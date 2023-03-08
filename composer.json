@@ -1,5 +1,6 @@
 {
     "require": {
-        "smarty/smarty": "4.3.*"
+        "smarty/smarty": "4.3.*",
+        "steampixel/simple-php-router": "^0.7.1"
     }
 }
