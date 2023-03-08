@@ -1,0 +1,10 @@
+{% include 'header.html.twig' %}
+<h1>Wgraj obrazek</h1>
+<form method="post" action="" enctype="multipart/form-data">
+    <label for="uploadedFileInput">
+        Wybierz plik do wgrania na serwer:
+    </label>
+    <input type="file" name="uploadedFile" id="uploadedFileInput">
+    <input type="submit" value="Wyślij plik" name="submit">
+</form>
+{% include 'footer.html.twig' %} 
