@@ -2,13 +2,15 @@
 class Post {
     private int $id;
     private string $filename;
-    private string $taimestamp;
+    private string $timestamp;
+    private string $customname;
 
-    function __construct(int $i, string $f, string $t)
+    function __construct(int $i, string $f, string $t, string $c)
     {
         $this->id = $i;
         $this->filename = $f;
-        $this->taimestamp = $t;   
+        $this->timestamp = $t;   
+        $this->customname = $c;
     }
 
     public function getFilename() : string {
@@ -16,7 +18,11 @@ class Post {
     }
 
     public function getTimestamp() : string {
-        return $this->taimestamp;
+        return $this->timestamp;
+    }
+
+    public function getCustomName() : string {
+        return $this->customname;
     }
 
     static function getLast() : Post {
@@ -25,7 +31,7 @@ class Post {
         $query->execute();
         $result = $query->get_result();
         $row = $result->fetch_assoc();
-        $p = new Post($row['id'], $row['filename'], $row['timestamp']);
+        $p = new Post($row['id'], $row['filename'], $row['timestamp'], $row['customname']);
         return $p;
 
     }
@@ -39,13 +45,14 @@ class Post {
         $result = $query->get_result();
         $postsArray = array();
         while($row = $result->fetch_assoc()){
-            $post = new Post($row['id'], $row['filename'], $row['timestamp']);
+            $post = new Post($row['id'], $row['filename'], $row['timestamp'], $row['customname']);
             array_push($postsArray, $post);
         }
         return $postsArray;
     }
 
     static function upload(string $tempFileName) {
+        $customname = $_POST['customName'];
         $targetDir = "img/";
 
         $imgInfo = @getimagesize($tempFileName);
@@ -64,9 +71,9 @@ class Post {
         $gdImage = @imagecreatefromstring($imageString);
         imagewebp($gdImage, $newFileName);
         global $db;
-        $query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?)");
+        $query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?, ?)");
         $dbTimestamp = date("Y-m-d H:i:s");
-        $query->bind_param("ss", $dbTimestamp, $newFileName);
+        $query->bind_param("sss", $dbTimestamp, $newFileName, $customname);
         if(!$query->execute())
             die("Błąd zapisu do bazy danych");
 

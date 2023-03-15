@@ -6,6 +6,7 @@
     <div id="post">
         <img src="{{ post.getFilename() }}">
         <h6>Data dodania: {{ post.getTimestamp() }} </h6>
+        <h6>Tytuł mema: {{ post.getCustomname() }}</h6>
     </div>
     {% endfor %}
 </div>
