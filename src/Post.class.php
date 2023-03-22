@@ -4,13 +4,18 @@ class Post {
     private string $filename;
     private string $timestamp;
     private string $customname;
+    private string $authorId;
+    private string $authorName;
 
-    function __construct(int $i, string $f, string $t, string $c)
+    function __construct(int $i, string $f, string $t, string $c, int $authorID)
     {
         $this->id = $i;
         $this->filename = $f;
         $this->timestamp = $t;   
         $this->customname = $c;
+        $this->authorId = $authorID;
+        global $db;
+        $this->authorName = User::getNameById($this->authorId);
     }
 
     public function getFilename() : string {
@@ -25,13 +30,17 @@ class Post {
         return $this->customname;
     }
 
+    public function getAuthorName() : string {
+        return $this->authorName;
+    }
+
     static function getLast() : Post {
         global $db;
         $query = $db->prepare("SELECT * FROM post ORDER BY timestamp DESC LIMIT 1");
         $query->execute();
         $result = $query->get_result();
         $row = $result->fetch_assoc();
-        $p = new Post($row['id'], $row['filename'], $row['timestamp'], $row['customname']);
+        $p = new Post($row['id'], $row['filename'], $row['timestamp'], $row['customname'], $row['userId']);
         return $p;
 
     }
@@ -45,13 +54,13 @@ class Post {
         $result = $query->get_result();
         $postsArray = array();
         while($row = $result->fetch_assoc()){
-            $post = new Post($row['id'], $row['filename'], $row['timestamp'], $row['customname']);
+            $post = new Post($row['id'], $row['filename'], $row['timestamp'], $row['customname'], $row['userId']);
             array_push($postsArray, $post);
         }
         return $postsArray;
     }
 
-    static function upload(string $tempFileName) {
+    static function upload(string $tempFileName, string $customname, int $userId) {
         $customname = $_POST['customName'];
         $targetDir = "img/";
 
@@ -71,9 +80,9 @@ class Post {
         $gdImage = @imagecreatefromstring($imageString);
         imagewebp($gdImage, $newFileName);
         global $db;
-        $query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?, ?)");
+        $query = $db->prepare("INSERT INTO post VALUES(NULL, ?, ?, ?, ?)");
         $dbTimestamp = date("Y-m-d H:i:s");
-        $query->bind_param("sss", $dbTimestamp, $newFileName, $customname);
+        $query->bind_param("sssi", $dbTimestamp, $newFileName, $customname, $userId);
         if(!$query->execute())
             die("Błąd zapisu do bazy danych");
 
