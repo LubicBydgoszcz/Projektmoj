@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Czas generowania: 15 Lut 2023, 13:53
+-- Czas generowania: 19 Kwi 2023, 15:23
 -- Wersja serwera: 10.4.24-MariaDB
 -- Wersja PHP: 8.0.19
 
@@ -20,38 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Baza danych: `bazacms`
 --
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla tabeli `post`
---
-
-CREATE TABLE `post` (
-  `id` int(11) NOT NULL,
-  `timestamp` date NOT NULL,
-  `filename` varchar(64) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Indeksy dla zrzutów tabel
---
-
---
--- Indeksy dla tabeli `post`
---
-ALTER TABLE `post`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT dla zrzuconych tabel
---
-
---
--- AUTO_INCREMENT dla tabeli `post`
---
-ALTER TABLE `post`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

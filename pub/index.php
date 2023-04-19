@@ -16,11 +16,18 @@ Route::add('/', function() {
 });
 
 Route::add('/upload', function() {
+    //strona z formularzem do wgrywania obrazków
     global $twig;
     $twigData = array("pageTitle" => "Wgraj mema");
-    if(isset($_SESSION['user']))
-    $twigData['user'] = $_SESSION['user'];
-    $twig->display("upload.html.twig", $twigData);
+    //jeśli użytkownik jest zalogowany to przekaż go do twiga
+    if(User::isAuth())
+    {
+        $twigData['user'] = $_SESSION['user'];
+        $twig->display("upload.html.twig", $twigData);
+    } else {
+        http_response_code(403);
+    }
+        
 });
 
 Route::add('/upload', function() {
@@ -54,11 +61,40 @@ Route::add('/login', function(){
 Route::add('/login', function() {
     global $twig;
     if(isset($_POST['submit'])) {
-        User::login($_POST['email'], $_POST['password']);
+        if(User::login($_POST['email'], $_POST['password'])) {
+            header("Location: http://localhost/projektmoj/pub");
+        } else {
+            //błąd logowania
+            $twigData = array('pageTitle' => "Zaloguj użytkownika",
+                                "message" => "Niepoprawny login lub hasło!");
+            $twig->display("login.html.twig", $twigData);
+        }
     }
-    header("Location: http://localhost/projektmoj/pub");
+    
 
 }, 'post');
+
+Route::add('/admin', function()  {
+    global $twig;
+    
+    if(User::isAuth()) {
+        $postArray = Post::getPage(1,100);
+        $twigData = array("postArray" => $postArray);
+        $twig->display("admin.html.twig", $twigData);
+    } else {
+        http_response_code(403);
+    }
+});
+
+Route::add('/admin/remove/([0-9]*)', function($id) {
+    if(Post::remove($id)) {
+        header("Location: http://localhost/projektmoj/pub/admin/");
+    } else {
+        die("Nie udało się usunąć podanego obrazka");
+    }
+});
+
+
 
 Route::run('/projektmoj/pub');
 ?>

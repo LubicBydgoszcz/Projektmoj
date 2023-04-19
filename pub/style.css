@@ -17,7 +17,11 @@ div#post {
 div#post img {
     width: 100%;
 }
-
 div#loggedUser {
     text-align: right;
-    font-weight: 1.5rem;}
+    font-weight: 1.5rem;
+
+}
+img.thumbnail {
+    max-width: 300px;
+}

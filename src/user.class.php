@@ -35,7 +35,7 @@ class User {
         return $query->execute();
     }
 
-    public static function login(string $email, string $password) {
+    public static function login(string $email, string $password) : bool {
         global $db;
         $query = $db->prepare("SELECT * FROM user WHERE email = ? LIMIT 1");
         $query->bind_param('s', $email);
@@ -46,6 +46,20 @@ class User {
         if(password_verify($password, $passwordHash)) {
             $u = new User($row['id'], $email);
             $_SESSION['user'] = $u;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static function isAuth() : bool {
+        if(isset($_SESSION['user'])) {
+            if($_SESSION['user'] instanceof User) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
     }
 }
