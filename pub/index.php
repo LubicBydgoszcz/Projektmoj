@@ -94,7 +94,14 @@ Route::add('/admin/remove/([0-9]*)', function($id) {
     }
 });
 
-
+Route::add('/upvote/([0-9]*)', function($id) {
+    Vote::upVote($id, $_SESSION['user']->getId());
+    header("Location: http://localhost/projektmoj/pub/");
+});
+Route::add('/downvote/([0-9]*)', function($id) {
+    Vote::downVote($id, $_SESSION['user']->getId());
+    header("Location: http://localhost/projektmoj/pub/");
+});
 
 Route::run('/projektmoj/pub');
 ?>

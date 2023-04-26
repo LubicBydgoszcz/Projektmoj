@@ -6,7 +6,7 @@ class Post {
     private string $customname;
     private string $authorId;
     private string $authorName;
-
+    private int $score;
     function __construct(int $i, string $f, string $t, string $c, int $authorID)
     {
         $this->id = $i;
@@ -16,6 +16,7 @@ class Post {
         $this->authorId = $authorID;
         global $db;
         $this->authorName = User::getNameById($this->authorId);
+        $this->score = Vote::getScore($this->id);
     }
 
     public function getId() : int {
@@ -36,6 +37,10 @@ class Post {
 
     public function getAuthorName() : string {
         return $this->authorName;
+    }
+
+    public function getScore() : int {
+        return $this->score;
     }
 
     static function getLast() : Post {

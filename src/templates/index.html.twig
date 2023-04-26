@@ -7,6 +7,7 @@
     {% for post in postArray %}
     <div id="post">
         <img src="{{ post.getFilename() }}">
+        <h6>Punkty: {{post.getScore() }}</h6>
         <h6>Autor: {{post.getAuthorName() }}</h6>
         <h6>Data dodania: {{ post.getTimestamp() }} </h6>
         <h6>Tytuł mema: {{ post.getCustomname() }}</h6>
@@ -14,5 +15,11 @@
     {% endfor %}
 </div>
 
+<style>
+    h1 {
+        font-family: cursive;
+        color: chartreuse;
+    }
+</style>
 
 {% include 'footer.html.twig' %}
